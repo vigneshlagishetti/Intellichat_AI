@@ -8,7 +8,8 @@ import { usePreferenceContext } from "@/context"
 import { useQuery } from "@tanstack/react-query"
 import { ChatOllama } from "@langchain/ollama"
 import { useMemo } from "react"
-
+import { ChatXAI } from "@langchain/xai"
+import { ChatDeepSeek } from "@langchain/deepseek"
 const isValidApiKey = (apiKey: string, baseModel: TBaseModel): boolean => {
   // Add your validation logic here
   return true // Placeholder logic
@@ -16,7 +17,15 @@ const isValidApiKey = (apiKey: string, baseModel: TBaseModel): boolean => {
 import { TAssistant } from "./use-chat-session"
 import { useAssistants } from "./use-bots"
 
-export type TBaseModel = "openai" | "anthropic" | "gemini" | "ollama"
+export type TBaseModel =
+  | "openai"
+  | "anthropic"
+  | "gemini"
+  | "ollama"
+  | "grok"
+  | "custom"
+  | "xai"
+  | "deepseek"
 
 export const models = [
   "gpt-4o",
@@ -24,22 +33,21 @@ export const models = [
   "gpt-4-turbo",
   "gpt-3.5-turbo",
   "gpt-3.5-turbo-0125",
-  "gpt-3.5-turbo-instruct",
   "claude-3-opus-20240229",
   "claude-3-sonnet-20240229",
   "claude-3-haiku-20240307",
-  // "gemini-pro",
-  "gemini-2.0-flash-latest",
+  "grok-2-1212",
+  "grok-2",
+  "grok-2-latest",
+  "grok-2-vision-1212",
   "gemini-2.0-pro-latest",
-  "	gemini-2.0-flash-001",
+  "gemini-2.0-flash-001",
   "gemini-1.5-flash-latest",
-  "gemini-1.5-pro-latest",
-
   "phi3:latest",
-  "mistral:latest",
   "llama2:latest",
-  "o3-mini-2025-01-31",
-  "o1-mini-2024-09-12",
+  "chatxai:latest",
+  "grok-beta",
+  "deepseek:latest",
 ]
 
 export type TModelKey = (typeof models)[number] | string
@@ -87,7 +95,6 @@ export const useModelList = () => {
           apiKey,
           temperature,
           maxTokens,
-          topP,
           maxRetries: 2,
         })
 
@@ -126,6 +133,28 @@ export const useModelList = () => {
           topP,
           maxRetries: 2,
           temperature,
+        })
+
+      case "grok":
+        return new ChatXAI({
+          model: model.key,
+          apiKey,
+          maxTokens,
+          temperature,
+          // topP,
+          // topK,
+          maxRetries: 2,
+        })
+
+      case "deepseek":
+        return new ChatDeepSeek({
+          model: model.key,
+          apiKey,
+          maxTokens,
+          temperature,
+          // topP,
+          // topK,
+          maxRetries: 2,
         })
 
       default:
@@ -183,31 +212,6 @@ export const useModelList = () => {
         maxOutputTokens: 4095,
       },
       {
-        name: "O3 Mini",
-        key: "o3-mini-2025-01-31",
-        isNew: false,
-        inputPrice: 0.5,
-        outputPrice: 1.5,
-        plugins: ["web_search", "image_generation", "memory"],
-        tokens: 16385,
-        icon: (size) => <ModelIcon size={size} type="gpt3" />,
-        baseModel: "openai",
-        maxOutputTokens: 4095,
-      },
-      {
-        name: "O1 Mini",
-        key: "o1-mini-2024-09-12",
-        isNew: false,
-        inputPrice: 0.5,
-        outputPrice: 1.5,
-        plugins: ["web_search", "image_generation", "memory"],
-        tokens: 16385,
-        icon: (size) => <ModelIcon size={size} type="gpt3" />,
-        baseModel: "openai",
-        maxOutputTokens: 4095,
-      },
-
-      {
         name: "GPT3.5 Turbo 0125",
         key: "gpt-3.5-turbo-0125",
         isNew: false,
@@ -218,19 +222,6 @@ export const useModelList = () => {
         maxOutputTokens: 4095,
       },
       {
-        name: "GPT3.5 Turbo Instruct",
-        key: "gpt-3.5-turbo-instruct",
-        isNew: false,
-        tokens: 4000,
-        inputPrice: 1.5,
-        outputPrice: 2,
-        plugins: ["web_search"],
-        icon: (size) => <ModelIcon size={size} type="gpt3" />,
-        baseModel: "openai",
-        maxOutputTokens: 4095,
-      },
-
-      {
         name: "Claude 3 Opus",
         key: "claude-3-opus-20240229",
         isNew: false,
@@ -240,7 +231,6 @@ export const useModelList = () => {
         plugins: [],
         icon: (size) => <ModelIcon size={size} type="anthropic" />,
         maxOutputTokens: 4095,
-
         baseModel: "anthropic",
       },
       {
@@ -253,7 +243,6 @@ export const useModelList = () => {
         maxOutputTokens: 4095,
         tokens: 200000,
         icon: (size) => <ModelIcon size={size} type="anthropic" />,
-
         baseModel: "anthropic",
       },
       {
@@ -268,18 +257,6 @@ export const useModelList = () => {
         icon: (size) => <ModelIcon size={size} type="anthropic" />,
         baseModel: "anthropic",
       },
-      // {
-      //   name: "Gemini Pro 1.5",
-      //   key: "gemini-1.5-pro-latest",
-      //   isNew: true,
-      //   inputPrice: 3.5,
-      //   outputPrice: 10.5,
-      //   plugins: [],
-      //   tokens: 200000,
-      //   icon: (size) => <ModelIcon size={size} type="gemini" />,
-      //   baseModel: "gemini",
-      //   maxOutputTokens: 8190,
-      // },
       {
         name: "Gemini Flash 1.5",
         key: "gemini-1.5-flash-latest",
@@ -292,36 +269,13 @@ export const useModelList = () => {
         baseModel: "gemini",
         maxOutputTokens: 8190,
       },
-      {
-        name: "Gemini Flash 2.0",
-        key: "gemini-2.0-flash-latest",
-        isNew: true,
-        inputPrice: 0.5,
-        outputPrice: 1.5,
-        plugins: [],
-        tokens: 200000,
-        icon: (size) => <ModelIcon size={size} type="gemini" />,
-        baseModel: "gemini",
-        maxOutputTokens: 8190,
-      },
+
       {
         name: "Gemini Pro 2.0",
         key: "gemini-2.0-pro-latest",
         isNew: true,
         inputPrice: 1.5,
         outputPrice: 5.5,
-        plugins: [],
-        tokens: 200000,
-        icon: (size) => <ModelIcon size={size} type="gemini" />,
-        baseModel: "gemini",
-        maxOutputTokens: 8190,
-      },
-      {
-        name: "Gemini Flash 2.0 001",
-        key: "gemini-2.0-flash-001",
-        isNew: true,
-        inputPrice: 0.5,
-        outputPrice: 1.5,
         plugins: [],
         tokens: 200000,
         icon: (size) => <ModelIcon size={size} type="gemini" />,
@@ -351,6 +305,54 @@ export const useModelList = () => {
         tokens: 200000,
         icon: (size) => <ModelIcon size={size} type="ollama" />,
         baseModel: "ollama",
+        maxOutputTokens: 4095,
+      },
+      {
+        name: "grok-2-1212",
+        key: "grok-2-1212",
+        isNew: false,
+        inputPrice: 0.5,
+        outputPrice: 1.5,
+        plugins: [],
+        tokens: 200000,
+        icon: (size) => <ModelIcon size={size} type="grok" />,
+        baseModel: "grok",
+        maxOutputTokens: 4095,
+      },
+      {
+        name: "grok-2",
+        key: "grok-2",
+        isNew: false,
+        inputPrice: 0.5,
+        outputPrice: 1.5,
+        plugins: [],
+        tokens: 200000,
+        icon: (size) => <ModelIcon size={size} type="grok" />,
+        baseModel: "grok",
+        maxOutputTokens: 4095,
+      },
+      {
+        name: "grok",
+        key: "grok-beta",
+        isNew: false,
+        inputPrice: 0.5,
+        outputPrice: 1.5,
+        plugins: [],
+        tokens: 200000,
+        icon: (size) => <ModelIcon size={size} type="grok" />,
+        baseModel: "grok",
+        maxOutputTokens: 4095,
+      },
+      {
+        name: "DeepSeek",
+        key: "deepseek:latest",
+        isNew: true,
+        inputPrice: 0.5,
+        outputPrice: 1.5,
+        plugins: [],
+        tokens: 200000,
+        icon: (size) => <ModelIcon size={size} type="deepseek" />,
+        baseModel: "deepseek",
         maxOutputTokens: 4095,
       },
     ],
@@ -391,6 +393,10 @@ export const useModelList = () => {
         return "gemini-pro"
       case "ollama":
         return "phi3:latest"
+      case "grok":
+        return "grok-2-1212"
+      default:
+        return "custom"
     }
   }
 

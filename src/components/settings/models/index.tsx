@@ -3,7 +3,9 @@ import { OpenAISettings } from "./openai"
 import { AnthropicSettings } from "./anthropic"
 import { GeminiSettings } from "./gemini"
 import { OllamaSettings } from "./ollama"
+import { GrokSettings } from "./grok"
 import { Flex } from "@/components/ui/flex"
+import { DeepSeekSettings } from "./deepseek"
 import {
   Accordion,
   AccordionContent,
@@ -25,6 +27,13 @@ export const ModelSettings = () => {
       settingsComponent: OpenAISettings,
     },
     {
+      label: "Grok",
+      value: "grok",
+      iconType: "grok",
+      connected: !!apiKeys.grok,
+      settingsComponent: GrokSettings,
+    },
+    {
       label: "Anthropic",
       value: "anthropic",
       iconType: "anthropic",
@@ -44,6 +53,13 @@ export const ModelSettings = () => {
       iconType: "ollama",
       connected: !!apiKeys.ollama,
       settingsComponent: OllamaSettings,
+    },
+    {
+      label: "DeepSeek",
+      value: "deepseek",
+      iconType: "deepseek",
+      connected: !!apiKeys.deepseek,
+      settingsComponent: DeepSeekSettings,
     },
   ]
 

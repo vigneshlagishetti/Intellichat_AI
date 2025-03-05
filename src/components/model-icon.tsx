@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 //import { SparklesIcon } from "@hugeicons/react";
-import { Sparkles } from "lucide-react" 
+import { Sparkles } from "lucide-react"
 
 export type ModelIconType =
   | "gpt3"
@@ -9,6 +9,7 @@ export type ModelIconType =
   | "anthropic"
   | "gemini"
   | "openai"
+  | "grok"
   | "chathub"
   | "websearch"
   | "calculator"
@@ -35,6 +36,8 @@ export const ModelIcon = ({ type, size }: TModelIcon) => {
     duckduckgo_search: "/icons/duckduckgo.svg",
     website_reader: "/icons/website_reader.svg",
     ollama: "/icons/ollama.svg",
+    grok: "/icons/grok.svg",
+    deepseek: "/icons/deepseek.svg",
   }
 
   if (type === "custom") {

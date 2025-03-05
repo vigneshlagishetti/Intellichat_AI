@@ -22,12 +22,15 @@ export const useLLMTest = () => {
       }
 
       const selectedModelKey = getModelByKey(modelKey)
-
+      console.log("Selected Model Key:", selectedModelKey)
       if (!selectedModelKey) {
+        console.error("Error: Model Key is invalid or not found.")
         return false
       }
 
       const selectedModel = await createInstance(selectedModelKey, apiKey)
+      console.log("Creating instance with:", selectedModelKey, apiKey)
+
       const data = await selectedModel
         .withListeners({
           onError: (error) => {
