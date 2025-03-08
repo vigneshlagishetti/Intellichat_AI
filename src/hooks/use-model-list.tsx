@@ -352,7 +352,7 @@ export const useModelList = () => {
         plugins: [],
         tokens: 200000,
         icon: (size) => <ModelIcon size={size} type="deepseek" />,
-        baseModel: "deepseek",
+        baseModel: "openai",
         maxOutputTokens: 4095,
       },
     ],
