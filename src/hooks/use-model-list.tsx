@@ -25,7 +25,7 @@ export type TBaseModel =
   | "grok"
   | "custom"
   | "xai"
-  | "deepseek"
+ // | "deepseek"
 
 export const models = [
   "gpt-4o",
@@ -47,7 +47,7 @@ export const models = [
   "llama2:latest",
   "chatxai:latest",
   "grok-beta",
-  "deepseek:latest",
+  //"deepseek:latest",
 ]
 
 export type TModelKey = (typeof models)[number] | string
@@ -146,16 +146,16 @@ export const useModelList = () => {
           maxRetries: 2,
         })
 
-      case "deepseek":
-        return new ChatDeepSeek({
-          model: model.key,
-          apiKey,
-          maxTokens,
-          temperature,
-          // topP,
-          // topK,
-          maxRetries: 2,
-        })
+      // case "deepseek":
+      //   return new ChatDeepSeek({
+      //     model: model.key,
+      //     apiKey,
+      //     maxTokens,
+      //     temperature,
+      //     // topP,
+      //     // topK,
+      //     maxRetries: 2,
+      //   })
 
       default:
         throw new Error("Invalid model")
@@ -343,18 +343,18 @@ export const useModelList = () => {
         baseModel: "grok",
         maxOutputTokens: 4095,
       },
-      {
-        name: "DeepSeek",
-        key: "deepseek:latest",
-        isNew: true,
-        inputPrice: 0.5,
-        outputPrice: 1.5,
-        plugins: [],
-        tokens: 200000,
-        icon: (size) => <ModelIcon size={size} type="deepseek" />,
-        baseModel: "openai",
-        maxOutputTokens: 4095,
-      },
+      // {
+      //   name: "DeepSeek",
+      //   key: "deepseek:latest",
+      //   isNew: true,
+      //   inputPrice: 0.5,
+      //   outputPrice: 1.5,
+      //   plugins: [],
+      //   tokens: 200000,
+      //   icon: (size) => <ModelIcon size={size} type="deepseek" />,
+      //   baseModel: "openai",
+      //   maxOutputTokens: 4095,
+      // },
     ],
     []
   )
@@ -395,6 +395,8 @@ export const useModelList = () => {
         return "phi3:latest"
       case "grok":
         return "grok-2-1212"
+      // case "deepseek":
+      //   return "deepseek:latest"
       default:
         return "custom"
     }

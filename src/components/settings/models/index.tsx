@@ -5,7 +5,7 @@ import { GeminiSettings } from "./gemini"
 import { OllamaSettings } from "./ollama"
 import { GrokSettings } from "./grok"
 import { Flex } from "@/components/ui/flex"
-import { DeepSeekSettings } from "./deepseek"
+// import { DeepSeekSettings } from "./deepseek"
 import {
   Accordion,
   AccordionContent,
@@ -54,13 +54,13 @@ export const ModelSettings = () => {
       connected: !!apiKeys.ollama,
       settingsComponent: OllamaSettings,
     },
-    {
-      label: "DeepSeek",
-      value: "deepseek",
-      iconType: "deepseek",
-      connected: !!apiKeys.deepseek,
-      settingsComponent: DeepSeekSettings,
-    },
+    // {
+    //   label: "DeepSeek",
+    //   value: "deepseek",
+    //   iconType: "deepseek",
+    //   connected: !!apiKeys.deepseek,
+    //   settingsComponent: DeepSeekSettings,
+    // },
   ]
 
   return (
